@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(Calculator());
@@ -32,12 +33,42 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
   double equationFontSize = 38.0;
   double resultFontSize = 48.0;
 
-  buttonPressed(String buttonText){
+  buttonPressed(String buttonText) {
     setState(() {
-      if(buttonText=="C"){
+      if (buttonText == "C") {
+        equation = "0";
+        result = "0";
+        //  equationFontSize = 38.0;
+        //  resultFontSize = 48.0;
+      } else if (buttonText == "⌫") {
+        equationFontSize = 48.0;
+        resultFontSize = 38.0;
+        equation = equation.substring(0, equation.length - 1);
+        if (equation == "") {
+          equation = "0";
+        }
+      } else if (buttonText == "=") {
+        equationFontSize = 38.0;
+        resultFontSize = 48.0;
 
-      }else if(buttonText==""){
+        expression = equation;
 
+        try {
+          Parser p = Parser();
+          Expression exp = p.parse(expression);
+          
+
+          ContextModel cm = ContextModel();
+          result =  `${exp.evaluate(EvaluationType.REAL,cm)}`;
+        } catch (e) {
+          result = "Error";
+        }
+      } else {
+        if (equation == "0") {
+          equation = buttonText;
+        } else {
+          equation = equation + buttonText;
+        }
       }
     });
   }
@@ -51,6 +82,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+              // minimumSize: const Size(0, 0),
               shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0.0),
             side: BorderSide(
@@ -163,7 +195,10 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                     ),
                     TableRow(
                       children: [
-                        buildButton("=", 1, Colors.redAccent),
+                        Container(
+                            // width: 12,
+                            height: 151.5,
+                            child: buildButton("=", 1, Colors.redAccent)),
                         // Padding(padding: EdgeInsets.all(1)),
                         // Spacer(),
                       ],
