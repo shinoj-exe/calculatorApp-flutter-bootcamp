@@ -52,14 +52,15 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         resultFontSize = 48.0;
 
         expression = equation;
+        // expression = expression.replaceAll('*', )
+        // expression = expression.replaceAll(from, '*');
 
         try {
-          Parser p = Parser();
+          Parser p = new Parser();
           Expression exp = p.parse(expression);
-          
 
           ContextModel cm = ContextModel();
-          result =  `${exp.evaluate(EvaluationType.REAL,cm)}`;
+          result = '${exp.evaluate(EvaluationType.REAL, cm)}';
         } catch (e) {
           result = "Error";
         }
